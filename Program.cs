@@ -1,7 +1,19 @@
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Miminal.DTOs;
+using MiminalApi.Infraestrutura.DB;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<DbContexto>(Options =>
+{
+    Options.UseMySql(
+        builder.Configuration.GetConnectionString("mysql"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("mysql"))
+        );
+});
+
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World luiz!");
