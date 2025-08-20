@@ -15,7 +15,7 @@ namespace miminal_api.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "administradores",
+                name: "Administradores",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -29,7 +29,7 @@ namespace miminal_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_administradores", x => x.Id);
+                    table.PrimaryKey("PK_Administradores", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
@@ -38,7 +38,7 @@ namespace miminal_api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "administradores");
+                name: "Administradores");
         }
     }
 }

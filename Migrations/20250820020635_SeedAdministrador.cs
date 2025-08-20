@@ -11,7 +11,7 @@ namespace miminal_api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "administradores",
+                table: "Administradores",
                 columns: new[] { "Id", "Email", "Perfiel", "Senha" },
                 values: new object[] { 1, "admin@teste.com", "admin", "admin" });
         }
@@ -20,7 +20,7 @@ namespace miminal_api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "administradores",
+                table: "Administradores",
                 keyColumn: "Id",
                 keyValue: 1);
         }
