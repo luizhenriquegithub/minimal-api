@@ -1,10 +1,10 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Miminal.Dominio.Servicos;
 using Miminal.DTOs;
 using miminal_api.Dominio.Interfaces;
+using miminal_api.Dominio.ModelViews;
 using MiminalApi.Infraestrutura.DB;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +24,7 @@ builder.Services.AddDbContext<DbContexto>(Options =>
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World, Luiz Henrique");
+app.MapGet("/", () => Results.Json(new Home()));
 
 app.MapPost("/login", ([FromBody] LoginDTO loginDTO, IAdministradorServico AdministradorServico) =>
 {
@@ -38,5 +38,4 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.Run();
-
 
