@@ -14,6 +14,19 @@ public class DbContexto : DbContext
 
     public DbSet<Administrador> administradores { get; set; } = default!;
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Administrador>().HasData(
+            new Administrador
+            {
+                Id = 1,
+                Email = "admin@teste.com",
+                Senha = "admin",
+                Perfiel = "admin"
+            }
+        );
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
