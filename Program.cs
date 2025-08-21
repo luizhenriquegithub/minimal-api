@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Miminal.Dominio.Servicos;
 using Miminal.DTOs;
 using miminal_api.Dominio.DTOs;
+using miminal_api.Dominio.Enuns;
 using miminal_api.Dominio.Interfaces;
 using miminal_api.Dominio.ModelViews;
 using miminal_api.Dominio.Servicos;
@@ -45,6 +46,41 @@ app.MapPost("/login", ([FromBody] LoginDTO loginDTO, IAdministradorServico Admin
     else
         return Results.Unauthorized();
 }).WithTags("Administradores");
+
+app.MapPost("/administrador", ([FromBody] AdministradorDTO administradorDTO, IAdministradorServico administradorServico) =>
+{
+    var erros = AdmValidador.Validar(administradorDTO);
+    if (erros.Any())
+        return Results.BadRequest(new { Erros = erros });
+
+    var administrador = new Administrador
+    {
+        Email = administradorDTO.Email,
+        Senha = administradorDTO.Senha,
+        Perfiel = administradorDTO.Perfil.ToString()
+    };
+
+    administradorServico.Incluir(administrador);
+    return Results.Created($"/administrador/{administrador}", administrador);
+
+}).WithTags("Administradores");
+
+app.MapGet("/administradores", ([FromQuery] int pagina, IAdministradorServico administradorServico) =>
+{
+    var admin = administradorServico.Todos(pagina);
+    return Results.Ok(admin);
+
+}).WithTags("Administradores");
+
+app.MapGet("/administradores/{id}", ([FromRoute] int id, IAdministradorServico administradorServico) =>
+{
+    var administrador = administradorServico.BuscaPorId(id);
+    if (administrador == null) return Results.NotFound();
+
+    return Results.Ok(administrador);
+
+}).WithTags("Administradores");
+
 #endregion
 
 #region Veiculos
@@ -70,6 +106,7 @@ app.MapGet("/veiculos", ([FromQuery] int pagina, IVeiculoServico veiculoServico)
 {
     var veiculo = veiculoServico.Todos(pagina);
     return Results.Ok(veiculo);
+
 }).WithTags("Veiculos");
 
 app.MapGet("/veiculos/{id}", ([FromRoute] int id, IVeiculoServico veiculoServico) =>
