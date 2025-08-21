@@ -7,6 +7,7 @@ using miminal_api.Dominio.DTOs;
 using miminal_api.Dominio.Interfaces;
 using miminal_api.Dominio.ModelViews;
 using miminal_api.Dominio.Servicos;
+using miminal_api.Dominio.Validador;
 using MiminalApi.Dominio.Entidades;
 using MiminalApi.Infraestrutura.DB;
 
@@ -55,8 +56,14 @@ app.MapPost("/veiculos", ([FromBody] VeiculoDTO veiculoDTO, IVeiculoServico veic
         Marca = veiculoDTO.Marca,
         Ano = veiculoDTO.Ano
     };
+
+    var erros = VeiculoValidador.Validar(veiculoDTO);
+    if (erros.Any())
+        return Results.BadRequest(new { Erros = erros });
+
     veiculoServico.Incluir(veiculo);
     return Results.Created($"/veiculo/{veiculo.Id}", veiculo);
+
 }).WithTags("Veiculos");
 
 app.MapGet("/veiculos", ([FromQuery] int pagina, IVeiculoServico veiculoServico) =>
@@ -82,8 +89,12 @@ app.MapPut("/veiculos/{id}", ([FromRoute] int id, VeiculoDTO veiculoDTO, IVeicul
     veiculo.Nome = veiculoDTO.Nome;
     veiculo.Marca = veiculoDTO.Marca;
     veiculo.Ano = veiculoDTO.Ano;
-    veiculoServico.Atualizar(veiculo);
 
+    var erros = VeiculoValidador.Validar(veiculoDTO);
+    if (erros.Any())
+        return Results.BadRequest(new { Erros = erros });
+
+    veiculoServico.Atualizar(veiculo);
     return Results.Ok(veiculo);
 
 }).WithTags("Veiculos");
