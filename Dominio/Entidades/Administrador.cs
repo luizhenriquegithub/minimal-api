@@ -19,5 +19,5 @@ public class Administrador
 
     [Required]
     [StringLength(10)]
-    public string Perfiel { get; set; } = default!;
+    public string Perfil { get; set; } = default!;
 }
