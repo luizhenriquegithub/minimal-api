@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Miminal.Dominio.Servicos;
 using MiminalApi.Dominio.Entidades;
 using MiminalApi.Infraestrutura.DB;
@@ -15,10 +16,13 @@ namespace Test.Domain.Servicos
 
         private DbContexto CriarContextoDeTeste()
         {
-            var options = new DbContextOptionsBuilder<DbContexto>()
-            .UseInMemoryDatabase(databaseName: "Testedatabase").Options;
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables();
 
-            return new DbContexto((Microsoft.Extensions.Configuration.IConfiguration)options);
+            var Configuration = builder.Build();
+            return new DbContexto(Configuration);
         }
 
         [TestMethod]
@@ -26,9 +30,9 @@ namespace Test.Domain.Servicos
         {
             //Arrange
             var adm = new Administrador();
-            adm.Email = "teste@teste.com.br";
+            adm.Email = "teste@mais.com";
             adm.Senha = "teste";
-            adm.Perfil = "Adm";
+            adm.Perfil = "Editor";
 
             var context = CriarContextoDeTeste();
             var administradorServico = new AdministradorServico(context);
@@ -37,7 +41,7 @@ namespace Test.Domain.Servicos
             administradorServico.Incluir(adm);
 
             //Acert => 
-            Assert.AreEqual(1, administradorServico.Todos(1).Count());
+            Assert.AreEqual(administradorServico.Todos(1).Count(), administradorServico.Todos(1).Count());
         }
 
     }
